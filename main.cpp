@@ -1,8 +1,10 @@
 #include <iostream>
+#include <vector>
+#include <limits>
 
 using namespace std;
 
-class item
+class Item
 {
 public:
     string name;
@@ -11,7 +13,29 @@ public:
     string details;
     string url;
 
-    item(const string &name, float price, int priority, string details, string url) : name(name), price(price), priority(priority), details(details), url(url) {}
+    Item(const string &name, float price, int priority, string details, string url) : name(name), price(price), priority(priority), details(details), url(url) {}
+};
+
+class WishList
+{
+private:
+    vector<Item> itens;
+
+public:
+    void addItem(const string &name, float price, int priority, string details, string url)
+    {
+        itens.emplace_back(name, price, priority, details, url);
+    }
+
+    void showList()
+    {
+        for (const auto &item : itens)
+        {
+            cout << item.priority << " - " << item.name << " - R$" << item.price << endl;
+            cout << item.details << endl
+                 << item.url << endl;
+        }
+    }
 };
 
 int interface()
@@ -27,13 +51,52 @@ int interface()
     cout << ("**************************************") << endl;
 
     cin >> option;
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     return option;
 }
 
 int main()
 {
-    int option = 0;
-    option = interface();
-    cout << option;
+    WishList buyList;
+
+    string name;
+    float price;
+    int priority;
+    string details;
+    string url;
+
+    int option = 1;
+
+    while (option != 0)
+    {
+        option = interface();
+
+        switch (option)
+        {
+        case 1:
+            buyList.showList();
+            break;
+
+        case 2:
+            cout << "Nome" << endl;
+            getline(cin, name);
+            cout << "Preco" << endl;
+            cin >> price;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Prioridade" << endl;
+            cin >> priority;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Detalhes" << endl;
+            getline(cin, details);
+            cout << "URL" << endl;
+            getline(cin, url);
+
+            buyList.addItem(name, price, priority, details, url);
+            break;
+
+        default:
+            break;
+        }
+    }
 }
