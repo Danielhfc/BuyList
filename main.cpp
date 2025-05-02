@@ -2,6 +2,18 @@
 
 using namespace std;
 
+class item
+{
+public:
+    string name;
+    float price;
+    int priority;
+    string details;
+    string url;
+
+    item(const string &name, float price, int priority, string details, string url) : name(name), price(price), priority(priority), details(details), url(url) {}
+};
+
 int interface()
 {
     int option = 0;
