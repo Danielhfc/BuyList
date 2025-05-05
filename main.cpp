@@ -22,6 +22,35 @@ private:
     vector<Item> itens;
 
 public:
+    void loadVector(vector<Item> &itens)
+    {
+        string name;
+        string price;
+        string details;
+        string url;
+
+        ifstream file("list.txt");
+        while (getline(file, name) && getline(file, price) && getline(file, details) && getline(file, url))
+        {
+            itens.emplace_back(name, price, details, url);
+        }
+    }
+
+    void saveFile(vector<Item> &itens)
+    {
+        ofstream file("list.txt");
+
+        for (const auto &item : itens)
+        {
+            file << item.name << endl
+                 << item.price << endl
+                 << item.details << endl
+                 << item.url << endl;
+        }
+
+        file.close();
+    }
+
     void addItem(const string &name, string price, string details, string url)
     {
         ofstream file("list.txt", ios::app);
@@ -30,17 +59,19 @@ public:
              << details << endl
              << url << endl;
         file.close();
-
-        itens.emplace_back(name, price, details, url);
     }
 
     void removeItem(int priority)
     {
+        vector<Item> itens;
+        loadVector(itens);
+
         priority--;
         if (priority <= itens.size())
         {
             itens.erase(itens.begin() + priority);
             cout << "Item '" << priority << "' removido da lista.\n";
+            saveFile(itens);
         }
         else
         {
@@ -50,6 +81,8 @@ public:
 
     void editItem(int priority)
     {
+        vector<Item> itens;
+        loadVector(itens);
         priority--;
 
         if (priority <= itens.size())
@@ -73,6 +106,8 @@ public:
             itens[priority].price = price;
             itens[priority].details = details;
             itens[priority].url = url;
+
+            saveFile(itens);
         }
     }
 
@@ -98,6 +133,9 @@ public:
 
     void changePosItem(int priority)
     {
+        vector<Item> itens;
+        loadVector(itens);
+
         priority--;
         int pos;
 
@@ -110,11 +148,13 @@ public:
             if (pos < priority + 1)
             {
                 itens.insert(itens.begin() + pos - 1, itens[priority]);
+                saveFile(itens);
                 removeItem(priority + 2);
             }
             else if (pos > priority + 1)
             {
                 itens.insert(itens.begin() + pos, itens[priority]);
+                saveFile(itens);
                 removeItem(priority + 1);
             }
             else if (pos = priority + 1)
@@ -122,35 +162,6 @@ public:
                 cout << "Valor inserido e igual" << endl;
             }
         }
-    }
-
-    void loadVector()
-    {
-        string name;
-        string price;
-        string details;
-        string url;
-
-        ifstream file("list.txt");
-        while (getline(file, name) && getline(file, price) && getline(file, details) && getline(file, url))
-        {
-            itens.emplace_back(name, price, details, url);
-        }
-    }
-
-    void saveFile()
-    {
-        ofstream file("list.txt");
-
-        for (const auto &item : itens)
-        {
-            file << item.name << endl
-                 << item.price << endl
-                 << item.details << endl
-                 << item.url << endl;
-        }
-
-        file.close();
     }
 };
 
