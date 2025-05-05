@@ -10,11 +10,10 @@ class Item
 public:
     string name;
     float price;
-    int priority;
     string details;
     string url;
 
-    Item(const string &name, float price, int priority, string details, string url) : name(name), price(price), priority(priority), details(details), url(url) {}
+    Item(const string &name, float price, string details, string url) : name(name), price(price), details(details), url(url) {}
 };
 
 class WishList
@@ -23,19 +22,17 @@ private:
     vector<Item> itens;
 
 public:
-    void addItem(const string &name, float price, int priority, string details, string url)
+    void addItem(const string &name, float price, string details, string url)
     {
-        itens.emplace_back(name, price, priority, details, url);
+        itens.emplace_back(name, price, details, url);
     }
 
     void removeItem(int priority)
     {
-        auto it = std::find_if(itens.begin(), itens.end(), [&priority](const Item &item)
-                               { return item.priority == priority; });
-
-        if (it != itens.end())
+        priority--;
+        if (priority <= itens.size())
         {
-            itens.erase(it);
+            itens.erase(itens.begin() + priority);
             cout << "Item '" << priority << "' removido da lista.\n";
         }
         else
@@ -44,11 +41,16 @@ public:
         }
     }
 
+    void editItem(int priority)
+    {
+    }
+
     void showList()
     {
+        int priority = 1;
         for (const auto &item : itens)
         {
-            cout << item.priority << " - " << item.name << " - R$" << item.price << endl;
+            cout << priority++ << " - " << item.name << " - R$" << item.price << endl;
             cout << item.details << endl
                  << item.url << endl;
         }
@@ -68,7 +70,7 @@ int interface()
     cout << ("**************************************") << endl;
 
     cin >> option;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     return option;
 }
@@ -83,7 +85,7 @@ int main()
     string details;
     string url;
 
-    int option = 1, deletePos;
+    int option = 1;
 
     while (option != 0)
     {
@@ -101,25 +103,32 @@ int main()
             cout << "Preco" << endl;
             cin >> price;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Prioridade" << endl;
-            cin >> priority;
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Detalhes" << endl;
             getline(cin, details);
             cout << "URL" << endl;
             getline(cin, url);
 
-            buyList.addItem(name, price, priority, details, url);
+            buyList.addItem(name, price, details, url);
             break;
+
+        case 3:
+            cout << "Digite a posicao do item o qual deseja remover" << endl;
+            cin >> priority;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            buyList.editItem(priority);
 
         case 4:
             cout << "Digite a posicao do item o qual deseja remover" << endl;
-            cin >> deletePos;
+            cin >> priority;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            buyList.removeItem(deletePos);
+            buyList.removeItem(priority);
 
         default:
             break;
         }
     }
 }
+
+// TODO: teste
+// Melhorar interface? Imagens, web, etc
+// Gravacao em arquivos
