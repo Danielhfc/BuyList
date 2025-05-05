@@ -30,6 +30,7 @@ public:
              << details << endl
              << url << endl;
         file.close();
+
         itens.emplace_back(name, price, details, url);
     }
 
@@ -121,6 +122,35 @@ public:
                 cout << "Valor inserido e igual" << endl;
             }
         }
+    }
+
+    void loadVector()
+    {
+        string name;
+        string price;
+        string details;
+        string url;
+
+        ifstream file("list.txt");
+        while (getline(file, name) && getline(file, price) && getline(file, details) && getline(file, url))
+        {
+            itens.emplace_back(name, price, details, url);
+        }
+    }
+
+    void saveFile()
+    {
+        ofstream file("list.txt");
+
+        for (const auto &item : itens)
+        {
+            file << item.name << endl
+                 << item.price << endl
+                 << item.details << endl
+                 << item.url << endl;
+        }
+
+        file.close();
     }
 };
 
