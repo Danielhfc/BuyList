@@ -43,6 +43,30 @@ public:
 
     void editItem(int priority)
     {
+        priority--;
+
+        if (priority <= itens.size())
+        {
+            string name;
+            float price;
+            string details;
+            string url;
+
+            cout << "Nome" << endl;
+            getline(cin, name);
+            cout << "Preco" << endl;
+            cin >> price;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Detalhes" << endl;
+            getline(cin, details);
+            cout << "URL" << endl;
+            getline(cin, url);
+
+            itens[priority].name = name;
+            itens[priority].price = price;
+            itens[priority].details = details;
+            itens[priority].url = url;
+        }
     }
 
     void showList()
@@ -112,16 +136,18 @@ int main()
             break;
 
         case 3:
-            cout << "Digite a posicao do item o qual deseja remover" << endl;
+            cout << "Digite a posicao do item o qual deseja editar" << endl;
             cin >> priority;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             buyList.editItem(priority);
+            break;
 
         case 4:
             cout << "Digite a posicao do item o qual deseja remover" << endl;
             cin >> priority;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             buyList.removeItem(priority);
+            break;
 
         default:
             break;

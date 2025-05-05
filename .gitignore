@@ -33,4 +33,4 @@
 
 #Database
 *.txt
-*.vscode
+.vscode/
