@@ -9,11 +9,11 @@ class Item
 {
 public:
     string name;
-    float price;
+    string price;
     string details;
     string url;
 
-    Item(const string &name, float price, string details, string url) : name(name), price(price), details(details), url(url) {}
+    Item(const string &name, string price, string details, string url) : name(name), price(price), details(details), url(url) {}
 };
 
 class WishList
@@ -22,7 +22,7 @@ private:
     vector<Item> itens;
 
 public:
-    void addItem(const string &name, float price, string details, string url)
+    void addItem(const string &name, string price, string details, string url)
     {
         ofstream file("list.txt", ios::app);
         file << name << endl
@@ -54,7 +54,7 @@ public:
         if (priority <= itens.size())
         {
             string name;
-            float price;
+            string price;
             string details;
             string url;
 
@@ -77,13 +77,22 @@ public:
 
     void showList()
     {
+        ifstream file("list.txt");
+
+        string name;
+        string price;
+        string details;
+        string url;
+
         int priority = 1;
-        for (const auto &item : itens)
+        while (getline(file, name) && getline(file, price) && getline(file, details) && getline(file, url))
         {
-            cout << priority++ << " - " << item.name << " - R$" << item.price << endl;
-            cout << item.details << endl
-                 << item.url << endl;
+            cout << priority++ << " - " << name << " - " << price << endl;
+            cout << details << endl;
+            cout << url << endl;
         }
+
+        file.close();
     }
 
     void changePosItem(int priority)
@@ -139,7 +148,7 @@ int main()
     WishList buyList;
 
     string name;
-    float price;
+    string price;
     int priority;
     string details;
     string url;
