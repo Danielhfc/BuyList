@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <limits>
-#include <algorithm>
+#include <fstream>
 
 using namespace std;
 
@@ -24,6 +24,12 @@ private:
 public:
     void addItem(const string &name, float price, string details, string url)
     {
+        ofstream file("list.txt", ios::app);
+        file << name << endl
+             << price << endl
+             << details << endl
+             << url << endl;
+        file.close();
         itens.emplace_back(name, price, details, url);
     }
 
@@ -79,19 +85,48 @@ public:
                  << item.url << endl;
         }
     }
+
+    void changePosItem(int priority)
+    {
+        priority--;
+        int pos;
+
+        if (priority <= itens.size())
+        {
+            cout << "Digite a nova prioridade" << endl;
+            cin >> pos;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (pos < priority + 1)
+            {
+                itens.insert(itens.begin() + pos - 1, itens[priority]);
+                removeItem(priority + 2);
+            }
+            else if (pos > priority + 1)
+            {
+                itens.insert(itens.begin() + pos, itens[priority]);
+                removeItem(priority + 1);
+            }
+            else if (pos = priority + 1)
+            {
+                cout << "Valor inserido e igual" << endl;
+            }
+        }
+    }
 };
 
 int interface()
 {
     int option = 0;
 
-    cout << ("**************************************") << endl;
-    cout << ("* LISTA DE COMPRAS *") << endl;
-    cout << ("* Digite 1 para ver a lista *") << endl;
-    cout << ("* Digite 2 para adicionar itens na lista *") << endl;
-    cout << ("* Digite 3 para editar itens da lista *") << endl;
-    cout << ("* Digite 4 para remover itens da lista *") << endl;
-    cout << ("**************************************") << endl;
+    cout << ("***********************************************") << endl;
+    cout << ("*               LISTA DE COMPRAS              *") << endl;
+    cout << ("* Digite 1 para ver a lista                   *") << endl;
+    cout << ("* Digite 2 para adicionar itens na lista      *") << endl;
+    cout << ("* Digite 3 para editar itens da lista         *") << endl;
+    cout << ("* Digite 4 para remover itens da lista        *") << endl;
+    cout << ("* Digite 5 para mudar a prioridade de um item *") << endl;
+    cout << ("***********************************************") << endl;
 
     cin >> option;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -136,17 +171,24 @@ int main()
             break;
 
         case 3:
-            cout << "Digite a posicao do item o qual deseja editar" << endl;
+            cout << "Digite a pos do item o qual deseja editar" << endl;
             cin >> priority;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             buyList.editItem(priority);
             break;
 
         case 4:
-            cout << "Digite a posicao do item o qual deseja remover" << endl;
+            cout << "Digite a pos do item o qual deseja remover" << endl;
             cin >> priority;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             buyList.removeItem(priority);
+            break;
+
+        case 5:
+            cout << "Digite a pos do item o qual deseja editar a prioridade" << endl;
+            cin >> priority;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            buyList.changePosItem(priority);
             break;
 
         default:
@@ -154,7 +196,3 @@ int main()
         }
     }
 }
-
-// TODO: teste
-// Melhorar interface? Imagens, web, etc
-// Gravacao em arquivos
